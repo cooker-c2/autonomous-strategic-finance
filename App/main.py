@@ -1,33 +1,29 @@
-from fastapi import FastAPI, Query
-from fastapi.responses import StreamingResponse
-from App.models import ForecastQuery
-from App.services import forecast_large_customers, forecast_small_medium_customers, generate_excel
-from io import BytesIO
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import tempfile
+from .models import ForecastRequest
+from .services import generate_forecast
+
 
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return {"message": "Autonomous Strategic Finance API is running!"}
+@app.post("/forecast_excel")
+def forecast_excel(request: ForecastRequest):
+    try:
+        # Generate the forecast DataFrame
+        forecast_df = generate_forecast(request)
 
-@app.post("/forecast")
-def forecast(query: ForecastQuery):
-    if query.business_unit.lower() == "large":
-        df = forecast_large_customers(
-            months=query.months,
-            sales_per_executive=query.sales_per_executive,
-            revenue_per_customer=query.revenue_per_customer
-        )
-    elif query.business_unit.lower() == "small_medium":
-        df = forecast_small_medium_customers(
-            months=query.months,
-            marketing_cost=query.marketing_cost,
-            cac=query.cac,
-            conversion_rate=query.conversion_rate,
-            revenue_per_customer=query.revenue_per_customer
-        )
-    else:
-        return {"error": "Invalid business unit. Use 'large' or 'small_medium'"}
+        # Save to temporary Excel file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
+            forecast_df.to_excel(tmp.name, index=False)
+            file_path = tmp.name
 
-    excel_bytes = generate_excel(df)
-    return StreamingResponse(BytesIO(excel_bytes), media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=forecast.xlsx"})
+        # Return downloadable file
+        return FileResponse(
+            path=file_path,
+            filename=f"forecast_{request.business_unit}_{request.months}m.xlsx",
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        return {"error": str(e)}
