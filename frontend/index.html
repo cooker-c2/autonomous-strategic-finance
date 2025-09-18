@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Financials</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="header-title">Autonomous Financials 🤖</h1>
+        <p class="header-subtitle">Your AI-powered CFO for instant insights.</p>
+    </header>
+
+    <main class="container">
+        <section class="card query-card">
+            <h2 class="card-title">Generate Your Forecast</h2>
+            <div class="input-group">
+                <i class="fas fa-search input-icon"></i>
+                <input type="text" id="query-input" class="query-input" placeholder="e.g., Generate a 12-month revenue forecast for large and small customers">
+            </div>
+            <button id="generate-btn" class="cta-button">
+                Generate Forecast <i class="fas fa-chart-line"></i>
+            </button>
+        </section>
+
+        <section class="card output-card">
+            <h2 class="card-title">Financial Forecast</h2>
+            <div id="forecast-container" class="forecast-container">
+                <div class="placeholder-text">
+                    <i class="fas fa-lightbulb"></i>
+                    <p>Enter a query above to see your financial model.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
