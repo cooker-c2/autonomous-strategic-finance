@@ -1,5 +1,5 @@
 ### BUSINESS KNOWLEDGE BASE FOR SAAS COMPANY ###
-
+If the user mentions 
 BUSINESS UNITS:
 1. Large Customers (Enterprise)
 2. Small and Medium Customers (SMB)
